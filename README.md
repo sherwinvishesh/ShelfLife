@@ -1,4 +1,4 @@
-# ShelfLife: Save food, save money!
+# ShelfLife: Save food, Save money!
 Each year, households waste billions of dollars due to forgotten groceries expiring. In the U.S. alone, 30-40% of the food supply is wasted, costing around $161 billion annually. This not only strains household budgets but also contributes to environmental issues, like increased greenhouse gas emissions and resource depletion.
 
 **ShelfLife** is designed to help people track food expiration, reducing waste and promoting sustainable habits. Our app helps users manage their groceries efficiently by tracking expiration dates and sending timely notifications for items nearing expiry. Leveraging generative AI, the app also recommends recipes based on available ingredients and the user’s preferences, guiding them step-by-step through meal preparation.
@@ -45,3 +45,41 @@ https://github.com/user-attachments/assets/89e50163-3055-4664-87b3-46b4e4d452a5
 4. **Frontend Rendering**:
     - Once data is received from the backend (e.g., recognized grocery item or generated recipes), the frontend renders the content for the user.
     - **React Markdown** is used to render the recipes in a readable format.
+
+
+
+## Contributing to ShelfLife
+
+
+We welcome contributions from the community, especially those that enhance its AI capabilities. Feel free to fork the repository, make your improvements, and submit a pull request.
+
+
+## License
+
+
+This project is licensed under the Apache-2.0 license - see the [LICENSE](LICENSE) file for details.
+
+
+## Acknowledgments
+
+
+- Immense gratitude to `SunHacks` for hosting the hackathon that served as a launching pad for ShelfLife. Their commitment to nurturing innovation in the tech space has not only provided us with a platform to present our work but has also been a cornerstone of our development journey.
+
+
+- Heartfelt thanks to all who visit and engage with ShelfLife. Your interest, usage, and feedback are the driving forces behind our continuous improvement and innovation. We're committed to delivering value and enhancing your financial management experience, inspired by your support and insights.
+
+
+## Connect with Me
+
+
+Feel free to reach out and connect with me on [LinkedIn](https://www.linkedin.com/in/sherwinvishesh) or [Instagram](https://www.instagram.com/sherwinvishesh/).
+
+
+
+
+
+
+---
+
+
+Made by Sherwin, Avi and Mayank.
