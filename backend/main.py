@@ -1,11 +1,13 @@
-
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 import google.generativeai as genai
 from dotenv import load_dotenv
+from PIL import Image
+import base64
+import io
 
 
 # Load environment variables from .env file
@@ -96,5 +98,74 @@ def generate_recipes(chef_request: ChefRequest):
 
 
 
+# List of valid grocery items
+# VALID_GROCERIES = {
+#     "Apple", "Banana", "Orange", "Strawberry", "Blueberry", "Grape", "Pineapple", "Mango",
+#     "Avacado", "Potato", "Cherries", "Onion", "Garlic", "Carrot", "Spinach", "Lettuce", "Tomato", "Cucumber",
+#     "Broccoli", "Bell Pepper", "Milk", "Yogurt", "Butter", "Cheese", "Eggs", "Sour Cream", "Heavy Cream",
+#     "Cottage Cheese", "Chicken Breast", "Ground Beef", "Bacon", "Ham", "Salmon", "Shrimp", "Sausage",
+#     "Turkey Breast", "Pork", "Tuna", "White bread", "Whole Wheat Bread", "Tortilla", "Bagels", "Rice", "Pasta",
+#     "Oats", "Quinoa", "Canned Tomato", "Canned Corn", "Black beans", "Kidney beans", "Canned Pea", "Canned Pineapple",
+#     "Canned Peaches", "Canned Tuna", "Canned Soup", "Canned Chicken", "Potato Chip", "Popcorn", "Pretzels", "Crackers",
+#     "Granola Bars", "Chocolate Bars", "Cookies", "Almonds", "Peanuts", "Trail mix", "Coffee", "Tea Bags", "Orange Juice",
+#     "Apple Juice", "Soda", "Bottled Water", "Sparkling Water", "Sports Drinks", "Energy Drinks", "Beer",
+#     "All-Purpose-Flour", "Sugar", "Brown Sugar", "Baking Powder", "Baking Soda", "Yeast", "Olive Oil", "Vegetable Oil",
+#     "Salt", "Black Pepper", "Frozen Pizza", "Frozen Vegetable", "Frozen Fruits", "Ice cream", "Frozen Waffles",
+#     "Frozen Chicken Nuggets", "Frozen Fish", "Frozen French Fries", "Frozen Burritos", "Dragon Fruits", "Kiwi", "Watermelon", 
+#     "Plum", "Blackberry"
+# }
 
-# Run the FastAPI server with: uvicorn main:app --reload
+@app.post("/identify")
+def identify_grocery(request: dict):
+    try:
+        image_data = request["image"]
+        image_bytes = base64.b64decode(image_data.split(",")[1])
+
+        # Save the image temporarily for Gemini AI
+        temp_image_path = "temp_image.jpg"
+        with open(temp_image_path, "wb") as f:
+            f.write(image_bytes)
+
+        # Open the saved image for Gemini AI
+        with Image.open(temp_image_path) as img:
+            prompt = "Identify this grocery item."
+            response = genai.GenerativeModel("gemini-1.5-flash").generate_content([prompt, img])
+
+            # Log the full response from Gemini AI to see what is being returned
+            print("Gemini AI Response:", response)
+
+            # Extract the recognized text from the response
+            product_name = response.candidates[0].content.parts[0].text.strip().lower()
+
+            # Handle variations like "rolled oats" → "oats"
+            product_name = product_name.replace("rolled ", "").replace(".", "").strip()
+
+            # Match the product name to your list of accepted items
+            accepted_products = [
+                "apple", "banana", "orange", "strawberry", "blueberry", "grape",
+                "pineapple", "mango", "avocado", "potato", "cherries", "onion",
+                "garlic", "carrot", "spinach", "lettuce", "tomato", "cucumber",
+                "broccoli", "bell pepper", "milk", "yogurt", "butter", "cheese",
+                "eggs", "sour cream", "heavy cream", "cottage cheese", "chicken breast",
+                "ground beef", "bacon", "ham", "salmon", "shrimp", "sausage",
+                "turkey breast", "pork", "tuna", "white bread", "whole wheat bread",
+                "tortilla", "bagels", "rice", "pasta", "oats", "quinoa", "canned tomato",
+                "canned corn", "black beans", "kidney beans", "canned pea", "canned pineapple",
+                "canned peaches", "canned tuna", "canned soup", "canned chicken", "potato chip",
+                "popcorn", "pretzels", "crackers", "granola bars", "chocolate bars", "cookies",
+                "almonds", "peanuts", "trail mix", "coffee", "tea bags", "orange juice", "apple juice",
+                "soda", "bottled water", "sparkling water", "sports drinks", "energy drinks", "beer",
+                "all-purpose-flour", "sugar", "brown sugar", "baking powder", "baking soda", "yeast",
+                "olive oil", "vegetable oil", "salt", "black pepper", "frozen pizza", "frozen vegetable",
+                "frozen fruits", "ice cream", "frozen waffles", "frozen chicken nuggets", "frozen fish",
+                "frozen french fries", "frozen burritos", "dragon fruits", "kiwi", "watermelon", "plum", "blackberry"
+            ]
+
+            if product_name in accepted_products:
+                return {"name": product_name}
+            else:
+                return {"name": ""}
+
+    except Exception as e:
+        print(f"Error recognizing image: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error processing the image")
