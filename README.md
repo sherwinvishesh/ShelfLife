@@ -19,6 +19,70 @@ This not only minimizes food waste but also enhances culinary convenience. Shelf
 https://github.com/user-attachments/assets/89e50163-3055-4664-87b3-46b4e4d452a5
 
 
+## Getting Started
+
+### Prerequisites
+Make sure you have the following installed on your system:
+- Node.js and npm (for the frontend)
+- Python 3.12+ (for the backend)
+- FastAPI, Uvicorn (backend server), PIL (Python Imaging Library)
+- Google Gemini AI API key (required for AI functionalities)
+
+### Installation
+
+#### Backend (FastAPI)
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/sherwinvishesh/ShelfLife.git
+   cd shelflife/backend
+   ```
+
+2. **Create a virtual environment**:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows use venv\Scripts\activate
+   ```
+
+3. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Create a `.env` file** in the `backend` directory:
+   ```
+   GEMINI_API_KEY='your-google-gemini-api-key-here'
+   ```
+
+5. **Run the backend server**:
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+#### Frontend (React)
+1. **Navigate to the frontend directory**:
+   ```bash
+   cd ../frontend
+   ```
+
+2. **Install frontend dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Run the frontend development server**:
+   ```bash
+   npm start
+   ```
+
+4. Open your browser and go to `http://localhost:3000`.
+
+### Usage
+1. Open the app and sign in with the provided credentials.
+2. Add groceries manually or use the camera to scan items.
+3. View your grocery list, sorted by expiration date.
+4. Get notifications for items about to expire and receive recipe suggestions based on available groceries.
+
+
 
 ## Technologies Used
 
